@@ -11,6 +11,12 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 sh 'docker build -t $BACKEND_IMAGE ./backend'
@@ -25,9 +31,13 @@ pipeline {
 
         stage('Push Images') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                    sh 'docker push $BACKEND_IMAGE'
-                    sh 'docker push $FRONTEND_IMAGE'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh '''
+                    echo $PASS | docker login -u $USER --password-stdin
+                    docker push $BACKEND_IMAGE
+                    docker push $FRONTEND_IMAGE
+                    docker logout
+                    '''
                 }
             }
         }
