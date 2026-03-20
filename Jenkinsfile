@@ -1,19 +1,33 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_USER = "2023bcs0103nithin"
+        ROLL = "2023bcs0103"
+
+        FRONTEND_IMAGE = "${DOCKER_USER}/${ROLL}_frontend"
+        BACKEND_IMAGE = "${DOCKER_USER}/${ROLL}_backend"
+    }
+
     stages {
-        stage('Build Images') {
+
+        stage('Build Backend Image') {
             steps {
-                sh 'docker build -t 2023bcs0103nithin/2023bcs0103_backend ./backend'
-                sh 'docker build -t 2023bcs0103nithin/2023bcs0103_frontend ./frontend'
+                sh 'docker build -t $BACKEND_IMAGE ./backend'
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                sh 'docker build -t $FRONTEND_IMAGE ./frontend'
             }
         }
 
         stage('Push Images') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                    sh 'docker push 2023bcs0103nithin/2023bcs0103_backend'
-                    sh 'docker push 2023bcs0103nithin/2023bcs0103_frontend'
+                    sh 'docker push $BACKEND_IMAGE'
+                    sh 'docker push $FRONTEND_IMAGE'
                 }
             }
         }
