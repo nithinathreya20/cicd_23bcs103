@@ -1,11 +1,13 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
+
+app.use(cors())
 
 app.get('/student-details', (req, res) => {
     res.json({
-        name: "Your Name",
-        roll: "Your Roll",
-        register: "Your Register Number"
+        name: "R Nithin Athreya",
+        roll: "2023BCS0103",
     })
 })
 

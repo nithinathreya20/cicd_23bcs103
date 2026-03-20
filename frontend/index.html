@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Student Details</title>
 </head>
+
 <body>
     <h1>Student Info</h1>
     <p id="data"></p>
 
     <script>
-        fetch("http://backend:5000/student-details")
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("data").innerText =
-                data.name + " | " + data.roll + " | " + data.register
-        })
+        fetch("/api/student-details")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("data").innerText =
+                    data.name + " | " + data.roll
+            })
     </script>
 </body>
+
 </html>
